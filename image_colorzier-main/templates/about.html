@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>About - Image Colorizer</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                font-family: "Roboto", sans-serif;
+                background: #f8fafc;
+                color: #1f2937;
+                margin: 0;
+                padding: 0;
+            }
+
+            header {
+                background: linear-gradient(to right, #4f46e5, #6366f1);
+                color: white;
+                padding: 60px 20px 40px;
+                text-align: center;
+            }
+
+            header h1 {
+                font-size: 42px;
+                margin-bottom: 16px;
+            }
+
+            header p {
+                font-size: 18px;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .about-section {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 60px 20px;
+                text-align: center;
+            }
+
+            .about-section h2 {
+                font-size: 32px;
+                color: #1d4ed8;
+                margin-bottom: 20px;
+            }
+
+            .about-section p {
+                font-size: 18px;
+                line-height: 1.7;
+                margin-bottom: 30px;
+            }
+
+            .highlight {
+                font-weight: 700;
+                color: #0f172a;
+            }
+
+            .image-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 24px;
+                margin-top: 40px;
+            }
+
+            .image-grid img {
+                width: 100%;
+                border-radius: 10px;
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease;
+            }
+
+            .image-grid img:hover {
+                transform: scale(1.03);
+            }
+
+            .features {
+                background-color: #e0e7ff;
+                padding: 60px 20px;
+                text-align: center;
+            }
+
+            .features h2 {
+                font-size: 28px;
+                margin-bottom: 30px;
+            }
+
+            .feature-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 30px;
+                text-align: left;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            .feature {
+                background: white;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            }
+
+            .feature h3 {
+                margin-bottom: 12px;
+                color: #1e3a8a;
+            }
+
+            .testimonials {
+                padding: 60px 20px;
+                background-color: #f1f5f9;
+            }
+
+            .testimonial-card {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+                margin-bottom: 20px;
+                max-width: 700px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .testimonial-card p {
+                font-style: italic;
+                margin-bottom: 10px;
+            }
+
+            .testimonial-card .name {
+                font-weight: 700;
+                color: #1e40af;
+            }
+
+            .cta {
+                background: #1e3a8a;
+                color: white;
+                padding: 40px 20px;
+                text-align: center;
+            }
+
+            .cta h2 {
+                font-size: 28px;
+                margin-bottom: 20px;
+            }
+
+            .cta button {
+                background-color: #facc15;
+                border: none;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: 600;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+            }
+
+            .cta button:hover {
+                background-color: #eab308;
+            }
+
+            footer {
+                text-align: center;
+                margin-top: 0;
+                padding: 20px;
+                background-color: #1e3a8a;
+                color: white;
+            }
+            .back-button {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background-color: #1e40af;
+                color: white;
+                padding: 10px 16px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: bold;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                transition: background 0.3s ease;
+                z-index: 1000;
+            }
+
+            .back-button:hover {
+                background-color: #3b82f6;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="{{ url_for('index') }}" class="back-button">← Back to Home</a>
+        <header>
+            <h1>Bring Your Memories Back to Life</h1>
+            <p>
+                Image Colorizer uses cutting-edge AI to transform black and
+                white photos into vivid, lifelike images — all in just a few
+                clicks.
+            </p>
+        </header>
+
+        <div class="about-section">
+            <h2>Why Image Colorizer?</h2>
+            <p>
+                <span class="highlight">Image Colorizer</span> is your go-to
+                solution for restoring old photos, reviving historical moments,
+                and giving new life to the past. Whether it's a cherished family
+                portrait or a vintage landscape, our smart algorithms breathe
+                color into every pixel with stunning realism.
+            </p>
+
+            <div class="image-grid">
+                <img
+                    src="https://i.pinimg.com/736x/02/9f/d6/029fd6043d1fd3fc1ba012ed0dadbe38.jpg"
+                    alt="Example Before and After"
+                />
+                <img
+                    src="https://genk.mediacdn.vn/2017/eda76e49633091-58b9f75b8e691-1492155079122.jpg"
+                    alt="Example 1"
+                />
+
+                <img
+                    src="https://cdn.vjshop.vn/tin-tuc/anh-den-trang-voi-anh-mau/anh-den-trang-voi-anh-mau-9.jpg"
+                    alt="Example 3"
+                />
+            </div>
+        </div>
+
+        <div class="features">
+            <h2>Features You'll Love</h2>
+            <div class="feature-list">
+                <div class="feature">
+                    <h3>Smart Colorization</h3>
+                    <p>
+                        AI understands people, nature, and objects to apply
+                        natural colors that feel real.
+                    </p>
+                </div>
+                <div class="feature">
+                    <h3>No Downloads</h3>
+                    <p>
+                        Everything works online. Just upload and colorize
+                        instantly.
+                    </p>
+                </div>
+                <div class="feature">
+                    <h3>High-Resolution Support</h3>
+                    <p>
+                        Enjoy colorized results in beautiful detail, perfect for
+                        printing.
+                    </p>
+                </div>
+                <div class="feature">
+                    <h3>Privacy Guaranteed</h3>
+                    <p>
+                        Your images are never stored. We respect your privacy
+                        fully.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonials">
+            <h2 style="text-align: center; margin-bottom: 40px">
+                What Users Say
+            </h2>
+            <div class="testimonial-card">
+                <p>
+                    “I was blown away by how real the colorized photo of my
+                    grandmother looked. I had tears in my eyes!”
+                </p>
+                <div class="name">— Olivia Tran, Toronto</div>
+            </div>
+            <div class="testimonial-card">
+                <p>
+                    “We used Image Colorizer for our museum exhibit and people
+                    loved it! It's easy and powerful.”
+                </p>
+                <div class="name">— John Murray, Historical Society</div>
+            </div>
+        </div>
+
+        <div class="cta">
+            <h2>Ready to Colorize Your Memories?</h2>
+            <button onclick="window.location.href='!#'">Get Started Now</button>
+        </div>
+
+        <footer>© 2025 Image Colorizer. All rights reserved.</footer>
+    </body>
+</html>

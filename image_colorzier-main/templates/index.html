@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Image Colorizer</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Roboto", sans-serif;
+                background: linear-gradient(135deg, #e6f0fa, #b3d4fc);
+                min-height: 100vh;
+                padding: 20px;
+            }
+
+            .navbar {
+                background: #003366;
+                padding: 15px 30px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 51, 102, 0.3);
+                margin-bottom: 20px;
+            }
+
+            .navbar a {
+                color: #fff;
+                text-decoration: none;
+                font-size: 1.2em;
+                margin: 0 20px;
+                transition: color 0.3s ease;
+            }
+
+            .navbar a:hover {
+                color: #99ccff;
+            }
+
+            .user-info {
+                font-size: 1.1em;
+            }
+
+            .container {
+                background: #ffffff;
+                border-radius: 25px;
+                box-shadow: 0 20px 50px rgba(0, 51, 102, 0.25);
+                padding: 50px;
+                max-width: 1200px;
+                width: 100%;
+                margin: 0 auto;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+                border: 2px solid #cce5ff;
+            }
+
+            .container::before {
+                content: "";
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(
+                    circle,
+                    rgba(0, 102, 204, 0.1) 0%,
+                    rgba(255, 255, 255, 0) 70%
+                );
+                transform: rotate(30deg);
+                pointer-events: none;
+            }
+
+            h1 {
+                font-size: 3em;
+                color: #003366;
+                margin-bottom: 30px;
+                text-transform: uppercase;
+                letter-spacing: 3px;
+                font-weight: 700;
+                background: linear-gradient(90deg, #0066cc, #3399ff);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 2px 2px 5px rgba(0, 51, 102, 0.2);
+                position: relative;
+                z-index: 1;
+            }
+
+            .upload-section {
+                margin-bottom: 50px;
+                padding: 25px;
+                background: linear-gradient(135deg, #f5faff, #e6f0fa);
+                border-radius: 20px;
+                border: 3px dashed #99ccff;
+                box-shadow: inset 0 5px 15px rgba(0, 51, 102, 0.05);
+                position: relative;
+                z-index: 1;
+            }
+
+            input[type="file"] {
+                display: block;
+                margin: 0 auto 20px;
+                padding: 15px;
+                font-size: 1.2em;
+                border: none;
+                background: #fff;
+                border-radius: 12px;
+                cursor: pointer;
+                box-shadow: 0 5px 15px rgba(0, 51, 102, 0.15);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            input[type="file"]:hover {
+                transform: scale(1.03);
+                box-shadow: 0 8px 20px rgba(0, 51, 102, 0.2);
+            }
+
+            button {
+                background: linear-gradient(90deg, #0066cc, #0080ff);
+                color: #fff;
+                border: none;
+                padding: 15px 35px;
+                font-size: 1.3em;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+                position: relative;
+                z-index: 1;
+            }
+
+            button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 25px rgba(0, 102, 204, 0.4);
+            }
+
+            .image-preview {
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                gap: 40px;
+                margin-top: 50px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .image-box {
+                flex: 1;
+                min-width: 400px;
+                text-align: center;
+                background: #f0f7ff;
+                padding: 25px;
+                border-radius: 20px;
+                box-shadow: 0 10px 25px rgba(0, 51, 102, 0.15);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .image-box:hover {
+                transform: scale(1.05);
+                box-shadow: 0 15px 30px rgba(0, 51, 102, 0.25);
+            }
+
+            .image-box img {
+                max-width: 100%;
+                border-radius: 15px;
+                box-shadow: 0 8px 20px rgba(0, 51, 102, 0.2);
+                display: none;
+            }
+
+            .image-box p {
+                margin-top: 20px;
+                font-size: 1.3em;
+                color: #003366;
+                font-weight: 500;
+            }
+
+            #downloadButton {
+                display: none;
+                margin-top: 40px;
+                background: linear-gradient(90deg, #3399ff, #66b3ff);
+            }
+
+            .loader {
+                display: none;
+                border: 5px solid #cce5ff;
+                border-top: 5px solid #0066cc;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                animation: spin 1s linear infinite;
+                margin: 20px auto;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .notification {
+                display: none;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #0066cc;
+                color: #fff;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0, 51, 102, 0.3);
+                z-index: 1001;
+            }
+
+            @media (max-width: 800px) {
+                .container {
+                    padding: 30px;
+                }
+                h1 {
+                    font-size: 2.2em;
+                }
+                .image-box {
+                    min-width: 100%;
+                }
+            }
+            .user-box {
+                display: flex;
+                align-items: center;
+                background: rgba(255, 255, 255, 0.1);
+                padding: 6px 16px 6px 12px;
+                border-radius: 999px;
+                gap: 10px;
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+                transition: background 0.3s ease;
+            }
+
+            .user-box:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .user-box span {
+                color: #fff;
+                font-weight: 500;
+                font-size: 1em;
+            }
+
+            .avatar {
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                border: 2px solid #fff;
+                object-fit: cover;
+                cursor: pointer;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .avatar:hover {
+                transform: scale(1.1);
+                box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="navbar">
+            <div class="menu">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('about') }}">About</a>
+            </div>
+            <div class="user-box">
+                <span id="welcomeMessage">Welcome, Guest!</span>
+                <img
+                    id="logoutIcon"
+                    src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                    alt="Logout"
+                    onclick="logout()"
+                    class="avatar"
+                    title="Click to Logout"
+                    style="display: none"
+                />
+            </div>
+        </div>
+
+        <div class="container">
+            <h1>Image Colorizer</h1>
+            <div class="upload-section">
+                <input type="file" id="fileInput" accept="image/*" />
+                <button onclick="uploadImage()">Upload & Colorize</button>
+                <div id="loader" class="loader"></div>
+            </div>
+            <div class="image-preview">
+                <div class="image-box">
+                    <img id="originalImage" src="" alt="Original Image" />
+                    <p>Original Image</p>
+                </div>
+                <div class="image-box">
+                    <img id="colorizedImage" src="" alt="Colorized Image" />
+                    <p>Colorized Image</p>
+                </div>
+            </div>
+            <button id="downloadButton" onclick="downloadImage()">
+                Download Colorized Image
+            </button>
+        </div>
+
+        <!-- Notification -->
+        <div id="notification" class="notification"></div>
+
+        <script>
+            // Kiểm tra và hiển thị tên người dùng từ localStorage (giả lập)
+            const currentUser = localStorage.getItem("currentUser");
+            if (currentUser) {
+                document.getElementById(
+                    "welcomeMessage"
+                ).textContent = `Welcome, ${currentUser}!`;
+                document.getElementById("logoutIcon").style.display =
+                    "inline-block";
+            }
+
+            function showNotification(message) {
+                const notification = document.getElementById("notification");
+                notification.textContent = message;
+                notification.style.display = "block";
+                setTimeout(() => (notification.style.display = "none"), 3000);
+            }
+
+            function showContact() {
+                showNotification(
+                    "Contact Us: Email: support@imagecolorizer.com | Phone: +84 123 456 789"
+                );
+            }
+
+            function showAbout() {
+                showNotification(
+                    "Image Colorizer - Created by [Your Name] - Version 1.0"
+                );
+            }
+
+            function logout() {
+                localStorage.removeItem("currentUser");
+                document.getElementById("welcomeMessage").textContent =
+                    "Welcome, Guest!";
+                document.getElementById("logoutIcon").style.display = "none";
+
+                showNotification(
+                    "Logged out successfully! Returning to welcome page."
+                );
+                setTimeout(() => (window.location.href = "/"), 1000);
+            }
+
+            function uploadImage() {
+                let fileInput = document.getElementById("fileInput");
+                let loader = document.getElementById("loader");
+                if (!fileInput.files.length) {
+                    showNotification("Please select an image!");
+                    return;
+                }
+
+                loader.style.display = "block";
+                let formData = new FormData();
+                formData.append("image", fileInput.files[0]);
+
+                fetch("/upload", { method: "POST", body: formData })
+                    .then((response) => {
+                        if (!response.ok) throw new Error("Upload failed");
+                        return response.text();
+                    })
+                    .then((imagePath) => {
+                        loader.style.display = "none";
+                        document.getElementById("originalImage").src =
+                            URL.createObjectURL(fileInput.files[0]);
+                        document.getElementById("originalImage").style.display =
+                            "block";
+                        document.getElementById("colorizedImage").src =
+                            imagePath + "?" + new Date().getTime();
+                        document.getElementById(
+                            "colorizedImage"
+                        ).style.display = "block";
+                        document.getElementById(
+                            "downloadButton"
+                        ).style.display = "block";
+                        showNotification("Image colorized successfully!");
+                    })
+                    .catch((error) => {
+                        loader.style.display = "none";
+                        console.error("Error:", error);
+                        showNotification(
+                            "An error occurred while processing the image."
+                        );
+                    });
+            }
+
+            function downloadImage() {
+                window.location.href = "/download";
+                showNotification("Downloading your colorized image!");
+            }
+        </script>
+    </body>
+</html>

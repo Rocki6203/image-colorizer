@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Welcome to Image Colorizer</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Roboto", sans-serif;
+                background: linear-gradient(135deg, #e6f0fa, #b3d4fc);
+                min-height: 100vh;
+                padding: 20px;
+                overflow: hidden;
+            }
+
+            .welcome-container {
+                background: #ffffff;
+                border-radius: 25px;
+                box-shadow: 0 20px 50px rgba(0, 51, 102, 0.25);
+                padding: 60px;
+                max-width: 800px;
+                width: 100%;
+                margin: 0 auto;
+                text-align: center;
+                position: relative;
+                border: 2px solid #cce5ff;
+                overflow: hidden;
+            }
+
+            .welcome-container::before {
+                content: "";
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(
+                    circle,
+                    rgba(0, 102, 204, 0.15) 0%,
+                    rgba(255, 255, 255, 0) 70%
+                );
+                transform: rotate(45deg);
+                pointer-events: none;
+            }
+
+            h1 {
+                font-size: 2.8em;
+                color: #003366;
+                margin-bottom: 20px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                font-weight: 700;
+                background: linear-gradient(90deg, #0066cc, #3399ff);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 2px 2px 5px rgba(0, 51, 102, 0.2);
+                position: relative;
+                z-index: 1;
+            }
+
+            .intro-text {
+                font-size: 1.5em;
+                color: #004d99;
+                margin-bottom: 40px;
+                line-height: 1.4;
+                font-weight: 400;
+                text-shadow: 1px 1px 3px rgba(0, 51, 102, 0.1);
+                position: relative;
+                z-index: 1;
+            }
+
+            .intro-text span {
+                font-weight: 700;
+                color: #0066cc;
+            }
+
+            button {
+                background: linear-gradient(90deg, #0066cc, #0080ff);
+                color: #fff;
+                border: none;
+                padding: 15px 40px;
+                font-size: 1.4em;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+                position: relative;
+                z-index: 1;
+            }
+
+            button:hover {
+                transform: scale(1.05);
+                box-shadow: 0 12px 25px rgba(0, 102, 204, 0.4);
+            }
+
+            .particles {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 51, 102, 0.5);
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            }
+
+            .modal-content {
+                background: #fff;
+                padding: 30px;
+                border-radius: 15px;
+                width: 400px;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0, 51, 102, 0.3);
+            }
+
+            .modal-content h2 {
+                margin-bottom: 20px;
+                color: #003366;
+            }
+
+            .modal-content input {
+                width: 100%;
+                padding: 10px;
+                margin: 10px 0;
+                border: 1px solid #99ccff;
+                border-radius: 8px;
+            }
+
+            .notification {
+                display: none;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #0066cc;
+                color: #fff;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0, 51, 102, 0.3);
+                z-index: 1001;
+            }
+
+            @media (max-width: 600px) {
+                .welcome-container {
+                    padding: 40px;
+                }
+                h1 {
+                    font-size: 2em;
+                }
+                .intro-text {
+                    font-size: 1.2em;
+                }
+                button {
+                    padding: 12px 30px;
+                    font-size: 1.2em;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="welcome-container">
+            <h1>Welcome to Image Colorizer</h1>
+            <p class="intro-text">
+                "Biến những khoảnh khắc <span>đen trắng</span> thành bức tranh
+                <span>sống động</span> chỉ trong tích tắc!"
+            </p>
+            <button onclick="showModal('login')">Start Colorizing Now</button>
+            <div class="particles"></div>
+        </div>
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <h2>Login</h2>
+                <input type="text" id="loginUsername" placeholder="Username" />
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Password"
+                />
+                <button onclick="login()">Login</button>
+                <button onclick="closeModal('login')">Close</button>
+                <p style="margin-top: 15px; font-size: 0.95em">
+                    Don't have an account?
+                    <a
+                        href="#"
+                        onclick="switchModal('login', 'register')"
+                        style="color: #0066cc; text-decoration: underline"
+                    >
+                        Register
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <!-- Register Modal -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <h2>Register</h2>
+                <input
+                    type="text"
+                    id="registerUsername"
+                    placeholder="Username"
+                />
+                <input type="email" id="registerEmail" placeholder="Gmail" />
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="Password"
+                />
+                <input
+                    type="password"
+                    id="registerConfirm"
+                    placeholder="Confirm Password"
+                />
+                <button onclick="register()">Register</button>
+                <button onclick="closeModal('register')">Close</button>
+            </div>
+        </div>
+
+        <!-- Notification -->
+        <div id="notification" class="notification"></div>
+
+        <script>
+            function switchModal(current, next) {
+                closeModal(current);
+                showModal(next);
+            }
+
+            // Particle hiệu ứng
+            const particlesContainer = document.querySelector(".particles");
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement("div");
+                particle.style.position = "absolute";
+                particle.style.width = "5px";
+                particle.style.height = "5px";
+                particle.style.background = "rgba(0, 102, 204, 0.3)";
+                particle.style.borderRadius = "50%";
+                particle.style.left = Math.random() * 100 + "%";
+                particle.style.top = Math.random() * 100 + "%";
+                particle.style.animation = `float ${
+                    Math.random() * 5 + 2
+                }s infinite ease-in-out`;
+                particlesContainer.appendChild(particle);
+            }
+
+            const styleSheet = document.createElement("style");
+            styleSheet.textContent = `
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    `;
+            document.head.appendChild(styleSheet);
+
+            // Modal
+            function showModal(type) {
+                document.getElementById(`${type}Modal`).style.display = "flex";
+            }
+
+            function closeModal(type) {
+                document.getElementById(`${type}Modal`).style.display = "none";
+            }
+
+            function showNotification(message) {
+                const notification = document.getElementById("notification");
+                notification.textContent = message;
+                notification.style.display = "block";
+                setTimeout(() => (notification.style.display = "none"), 3000);
+            }
+
+            // Đăng ký
+            function register() {
+                const username = document
+                    .getElementById("registerUsername")
+                    .value.trim();
+                const email = document
+                    .getElementById("registerEmail")
+                    .value.trim();
+                const password =
+                    document.getElementById("registerPassword").value;
+                const confirm =
+                    document.getElementById("registerConfirm").value;
+
+                // Validate
+                if (!username || !email || !password || !confirm) {
+                    showNotification("Please fill in all fields.");
+                    return;
+                }
+
+                if (!email.includes("@") || !email.endsWith("@gmail.com")) {
+                    showNotification("Email must be a valid Gmail address.");
+                    return;
+                }
+
+                if (password !== confirm) {
+                    showNotification("Passwords do not match.");
+                    return;
+                }
+
+                let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+                if (users[username]) {
+                    showNotification("Username already exists.");
+                    return;
+                }
+
+                // Lưu user với email và password (có thể thêm field khác)
+                users[username] = { email, password };
+                localStorage.setItem("users", JSON.stringify(users));
+
+                showNotification("Registered successfully! Please login.");
+                closeModal("register");
+                showModal("login");
+            }
+
+            // Đăng nhập
+            function login() {
+                const username = document.getElementById("loginUsername").value;
+                const password = document.getElementById("loginPassword").value;
+
+                const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+                if (users[username] && users[username].password === password) {
+                    localStorage.setItem("currentUser", username);
+                    closeModal("login");
+                    showNotification("Logged in successfully! Redirecting...");
+                    setTimeout(() => (window.location.href = "/index"), 1000);
+                } else {
+                    showNotification("Invalid username or password.");
+                }
+            }
+
+            // Tự đăng nhập nếu đã lưu user
+            window.onload = () => {
+                const currentUser = localStorage.getItem("currentUser");
+                if (currentUser) {
+                    window.location.href = "/index";
+                }
+            };
+        </script>
+    </body>
+</html>
