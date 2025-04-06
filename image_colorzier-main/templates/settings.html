@@ -121,7 +121,7 @@
     </head>
     <body>
         <div class="settings-container">
-            <h2>Cài đặt tài khoản</h2>
+            <h2>Account settings</h2>
 
             <div class="form-group">
                 <label for="username">Username:</label>
@@ -129,42 +129,42 @@
             </div>
 
             <div class="form-group">
-                <label for="password">Mật khẩu mới:</label>
+                <label for="password">New password:</label>
                 <input
                     type="password"
                     id="password"
-                    placeholder="Chỉ nhập nếu muốn đổi mật khẩu"
+                    placeholder="Enter only if you want to change your password"
                 />
             </div>
 
             <div class="form-group">
-                <label for="name">Tên hiển thị:</label>
-                <input type="text" id="name" placeholder="Nhập tên của bạn" />
+                <label for="name">Display name:</label>
+                <input type="text" id="name" placeholder="Enter your name" />
             </div>
 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" placeholder="Email của bạn" />
+                <input type="email" id="email" placeholder="Email your name" />
             </div>
 
             <div class="avatar-section">
-                <h3>Ảnh đại diện</h3>
+                <h3>Avatar</h3>
                 <div class="avatar-preview">
                     <img
                         id="currentAvatar"
                         src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                        alt="Ảnh đại diện hiện tại"
+                        alt="Current profile picture"
                     />
                 </div>
                 <div class="upload-avatar">
-                    <label for="newAvatar">Chọn ảnh mới:</label>
+                    <label for="newAvatar">Select new photo:</label>
                     <input type="file" id="newAvatar" accept="image/*" />
                 </div>
             </div>
 
             <div class="actions">
-                <button onclick="saveSettings()">Lưu thay đổi</button>
-                <button onclick="window.location.href = '/';">Hủy</button>
+                <button onclick="saveSettings()">Save changes</button>
+                <button onclick="window.location.href = '/';">Cancel</button>
             </div>
         </div>
 
@@ -181,7 +181,7 @@
 
                 let currentUser = localStorage.getItem("currentUser");
                 if (!currentUser) {
-                    alert("Không tìm thấy người dùng hiện tại!");
+                    alert("No current user found!");
                     return;
                 }
 
@@ -190,7 +190,7 @@
                 // Nếu đổi username
                 if (newUsername !== currentUser) {
                     if (users[newUsername]) {
-                        alert("Username mới đã tồn tại!");
+                        alert("New username already exists!");
                         return;
                     }
                     users[newUsername] = { ...users[currentUser] };
@@ -212,13 +212,13 @@
                         users[currentUser].avatar = e.target.result;
                         currentAvatar.src = e.target.result;
                         localStorage.setItem("users", JSON.stringify(users));
-                        alert("Đã lưu cài đặt!");
+                        alert("Settings saved!");
                         window.location.href = "/";
                     };
                     reader.readAsDataURL(newAvatarInput.files[0]);
                 } else {
                     localStorage.setItem("users", JSON.stringify(users));
-                    alert("Đã lưu cài đặt!");
+                    alert("Settings saved!");
                     window.location.href = "/";
                 }
             }

@@ -8,6 +8,11 @@
             href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
             rel="stylesheet"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        />
+
         <style>
             * {
                 margin: 0;
@@ -401,6 +406,61 @@
                 background-color: #f9fcff;
                 box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
             }
+            .dropdown-menu {
+                display: none;
+                position: absolute;
+                top: 60px;
+                right: 30px;
+                background-color: white;
+                border-radius: 12px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                min-width: 180px;
+                z-index: 1000;
+                padding: 8px 0;
+                transition: all 0.3s ease;
+            }
+
+            .dropdown-menu a {
+                text-decoration: none;
+                color: #003366;
+                display: block;
+                transition: background 0.3s ease;
+                padding: 10px 20px;
+            }
+
+            .dropdown-menu a:hover {
+                background-color: #f0f8ff;
+            }
+
+            .menu-item {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                font-size: 1em;
+                font-weight: 500;
+            }
+
+            .icon-circle {
+                background-color: #e6f0fa;
+                 color: #0066cc;
+                border-radius: 50%;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 14px;
+                flex-shrink: 0;
+                transition: background 0.3s ease;
+            }
+
+            .menu-item span {
+                color: #003366;
+                font-size: 1em;
+            }
+
+        </style>
+    </head>
         </style>
     </head>
     <body>
@@ -420,10 +480,24 @@
                     title="User Menu"
                 />
                 <div id="userDropdown" class="dropdown-menu">
-                    <a href="#" onclick="openSettings(); return false;"
-                        >Settings</a
-                    >
-                    <a href="#" onclick="logout(); return false;">Logout</a>
+                    <a href="#" onclick="openSettings(); return false;">
+                        <div class="menu-item">
+                            <div class="icon-circle">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <span>Setting</span>
+                        </div>
+                    </a>
+                    
+                    <a href="#" onclick="logout(); return false;">
+                        <div class="menu-item">
+                            <div class="icon-circle">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </div>
+                            <span>Logout</span>
+                        </div>
+                    </a>
+                    
                 </div>
             </div>
         </div>
@@ -452,7 +526,7 @@
 
         <div id="settingsOverlay" class="settings-overlay">
             <div class="settings-modal">
-                <h2>Cài đặt tài khoản</h2>
+                <h2>Account settings</h2>
 
                 <div class="form-group">
                     <label for="username">Username:</label>
@@ -465,33 +539,33 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="oldPassword">Mật khẩu cũ:</label>
+                    <label for="oldPassword">Old password:</label>
                     <input type="password" id="oldPassword" placeholder="" />
                 </div>
 
                 <div class="form-group">
-                    <label for="newPassword">Mật khẩu mới:</label>
+                    <label for="newPassword">New password:</label>
                     <input type="password" id="newPassword" placeholder="" />
                 </div>
 
                 <div class="avatar-section">
-                    <h3>Ảnh đại diện</h3>
+                    <h3>Avatar</h3>
                     <div class="avatar-preview">
                         <img
                             id="currentAvatar"
                             src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                            alt="Ảnh đại diện hiện tại"
+                            alt="Current profile picture"
                         />
                     </div>
                     <div class="upload-avatar">
-                        <label for="newAvatar">Chọn ảnh mới:</label>
+                        <label for="newAvatar">Select new photo:</label>
                         <input type="file" id="newAvatar" accept="image/*" />
                     </div>
                 </div>
 
                 <div class="actions">
-                    <button onclick="saveSettings()">Lưu thay đổi</button>
-                    <button onclick="closeSettings()">Đóng</button>
+                    <button onclick="saveSettings()">Save changes</button>
+                    <button onclick="closeSettings()">Close</button>
                 </div>
             </div>
         </div>
@@ -503,11 +577,18 @@
             // Kiểm tra và hiển thị tên người dùng từ localStorage (giả lập)
             const currentUser = localStorage.getItem("currentUser");
             if (currentUser) {
+                const users = JSON.parse(localStorage.getItem("users") || "{}");
+                const user = users[currentUser];
+
+                // Hiển thị tên người dùng
                 document.getElementById(
                     "welcomeMessage"
                 ).textContent = `Welcome, ${currentUser}!`;
-                document.getElementById("logoutIcon").style.display =
-                    "inline-block";
+
+                // Nếu có avatar thì hiển thị avatar
+                if (user && user.avatar) {
+                    document.getElementById("avatarIcon").src = user.avatar;
+                }
             }
 
             function showNotification(message) {
