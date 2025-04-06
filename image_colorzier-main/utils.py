@@ -47,6 +47,11 @@ def about():
 def contact():
     return render_template('contact.html')
 
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+
 @app.route('/upload', methods=['POST'])
 def upload():
     if 'image' not in request.files:

@@ -244,6 +244,32 @@
                 transition: background 0.3s ease;
             }
 
+            .dropdown-menu {
+                display: none;
+                position: absolute;
+                top: 60px;
+                right: 30px;
+                background-color: white;
+                color: #003366;
+                border-radius: 10px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                overflow: hidden;
+                z-index: 1000;
+                min-width: 150px;
+            }
+
+            .dropdown-menu a {
+                display: block;
+                padding: 12px 20px;
+                text-decoration: none;
+                color: #003366;
+                transition: background 0.2s ease;
+            }
+
+            .dropdown-menu a:hover {
+                background-color: #f0f8ff;
+            }
+
             .user-box:hover {
                 background: rgba(255, 255, 255, 0.2);
             }
@@ -268,6 +294,113 @@
                 transform: scale(1.1);
                 box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
             }
+
+            /* ... Các style hiện tại của bạn ... */
+
+            .settings-overlay {
+                display: none; /* Ẩn overlay ban đầu */
+                position: fixed; /* Cố định trên màn hình */
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5); /* Nền đen mờ */
+                z-index: 1000; /* Đảm bảo nó hiển thị trên các phần tử khác */
+                justify-content: center;
+                align-items: center;
+            }
+
+            .settings-modal {
+                background-color: white;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+                width: 90%;
+                max-width: 600px;
+                text-align: left;
+                position: relative; /* Để định vị nút đóng */
+            }
+
+            .settings-modal h2 {
+                text-align: center;
+                color: #003366;
+                margin-bottom: 20px;
+            }
+
+            .settings-modal .form-group {
+                margin-bottom: 20px;
+            }
+
+            .settings-modal .form-group label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: #003366;
+            }
+
+            .settings-modal .form-group input[type="text"],
+            .settings-modal .form-group input[type="email"] {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #cce5ff;
+                border-radius: 8px;
+            }
+
+            .settings-modal .avatar-section {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .settings-modal .avatar-preview {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                overflow: hidden;
+                margin: 0 auto 10px;
+                border: 2px solid #99ccff;
+            }
+
+            .settings-modal .avatar-preview img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .settings-modal .upload-avatar input[type="file"] {
+                margin-top: 5px;
+                padding: 8px;
+                border: 1px solid #cce5ff;
+                border-radius: 6px;
+                background-color: #f0f8ff;
+            }
+
+            .settings-modal .actions {
+                text-align: center;
+            }
+
+            .settings-modal .actions button {
+                padding: 10px 20px;
+                margin: 0 5px;
+                border: none;
+                border-radius: 8px;
+                background-color: #0066cc;
+                color: white;
+                cursor: pointer;
+            }
+
+            .settings-modal .actions button:hover {
+                background-color: #0080ff;
+            }
+
+            .settings-modal input[type="password"] {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #cce5ff;
+                border-radius: 8px;
+                font-size: 1em;
+                background-color: #f9fcff;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
         </style>
     </head>
     <body>
@@ -277,17 +410,21 @@
                 <a href="{{ url_for('contact') }}">Contact</a>
                 <a href="{{ url_for('about') }}">About</a>
             </div>
-            <div class="user-box">
+            <div class="user-box" onclick="toggleDropdown(event)">
                 <span id="welcomeMessage">Welcome, Guest!</span>
                 <img
-                    id="logoutIcon"
+                    id="avatarIcon"
                     src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                    alt="Logout"
-                    onclick="logout()"
+                    alt="User Avatar"
                     class="avatar"
-                    title="Click to Logout"
-                    style="display: none"
+                    title="User Menu"
                 />
+                <div id="userDropdown" class="dropdown-menu">
+                    <a href="#" onclick="openSettings(); return false;"
+                        >Settings</a
+                    >
+                    <a href="#" onclick="logout(); return false;">Logout</a>
+                </div>
             </div>
         </div>
 
@@ -311,6 +448,52 @@
             <button id="downloadButton" onclick="downloadImage()">
                 Download Colorized Image
             </button>
+        </div>
+
+        <div id="settingsOverlay" class="settings-overlay">
+            <div class="settings-modal">
+                <h2>Cài đặt tài khoản</h2>
+
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" value="" />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" value="" />
+                </div>
+
+                <div class="form-group">
+                    <label for="oldPassword">Mật khẩu cũ:</label>
+                    <input type="password" id="oldPassword" placeholder="" />
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">Mật khẩu mới:</label>
+                    <input type="password" id="newPassword" placeholder="" />
+                </div>
+
+                <div class="avatar-section">
+                    <h3>Ảnh đại diện</h3>
+                    <div class="avatar-preview">
+                        <img
+                            id="currentAvatar"
+                            src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                            alt="Ảnh đại diện hiện tại"
+                        />
+                    </div>
+                    <div class="upload-avatar">
+                        <label for="newAvatar">Chọn ảnh mới:</label>
+                        <input type="file" id="newAvatar" accept="image/*" />
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button onclick="saveSettings()">Lưu thay đổi</button>
+                    <button onclick="closeSettings()">Đóng</button>
+                </div>
+            </div>
         </div>
 
         <!-- Notification -->
@@ -350,7 +533,7 @@
                 localStorage.removeItem("currentUser");
                 document.getElementById("welcomeMessage").textContent =
                     "Welcome, Guest!";
-                document.getElementById("logoutIcon").style.display = "none";
+                document.getElementById("userDropdown").style.display = "none";
 
                 showNotification(
                     "Logged out successfully! Returning to welcome page."
@@ -403,6 +586,134 @@
             function downloadImage() {
                 window.location.href = "/download";
                 showNotification("Downloading your colorized image!");
+            }
+
+            function toggleDropdown(event) {
+                event.stopPropagation(); // không cho lan ra ngoài để tránh đóng ngay
+                const dropdown = document.getElementById("userDropdown");
+                dropdown.style.display =
+                    dropdown.style.display === "block" ? "none" : "block";
+            }
+
+            document.addEventListener("click", function () {
+                const dropdown = document.getElementById("userDropdown");
+                dropdown.style.display = "none";
+            });
+
+            // ... Các hàm JavaScript hiện tại của bạn ...
+
+            function openSettings() {
+                document.getElementById("settingsOverlay").style.display =
+                    "flex";
+                // Load thông tin người dùng (nếu bạn có)
+                loadUserSettings();
+            }
+
+            function closeSettings() {
+                document.getElementById("settingsOverlay").style.display =
+                    "none";
+            }
+
+            function saveSettings() {
+                const usernameInput = document
+                    .getElementById("username")
+                    .value.trim();
+                const email = document.getElementById("email").value.trim();
+                const oldPassword =
+                    document.getElementById("oldPassword").value;
+                const newPassword =
+                    document.getElementById("newPassword").value;
+                const newAvatarInput = document.getElementById("newAvatar");
+                const currentAvatar = document.getElementById("currentAvatar");
+
+                let currentUser = localStorage.getItem("currentUser");
+                if (!currentUser) {
+                    showNotification(
+                        "Không tìm thấy người dùng đang đăng nhập."
+                    );
+                    return;
+                }
+
+                let users = JSON.parse(localStorage.getItem("users") || "{}");
+                const userData = users[currentUser];
+
+                // Kiểm tra mật khẩu cũ nếu muốn đổi mật khẩu
+                if (newPassword) {
+                    if (oldPassword !== userData.password) {
+                        showNotification(
+                            "Mật khẩu cũ không đúng. Không thể đổi mật khẩu."
+                        );
+                        return;
+                    }
+                    userData.password = newPassword;
+                }
+
+                // Nếu đổi username
+                if (usernameInput !== currentUser) {
+                    if (users[usernameInput]) {
+                        showNotification("Username mới đã tồn tại.");
+                        return;
+                    }
+                    users[usernameInput] = { ...userData };
+                    delete users[currentUser];
+                    currentUser = usernameInput;
+                    localStorage.setItem("currentUser", usernameInput);
+                }
+
+                // Cập nhật email
+                users[currentUser].email = email;
+
+                // Cập nhật avatar nếu chọn
+                if (newAvatarInput.files && newAvatarInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        users[currentUser].avatar = e.target.result;
+                        currentAvatar.src = e.target.result;
+                        document.getElementById("avatarIcon").src =
+                            e.target.result;
+                        finishSave(users, currentUser);
+                    };
+                    reader.readAsDataURL(newAvatarInput.files[0]);
+                } else {
+                    finishSave(users, currentUser);
+                }
+            }
+
+            function finishSave(users, username) {
+                localStorage.setItem("users", JSON.stringify(users));
+                document.getElementById(
+                    "welcomeMessage"
+                ).textContent = `Welcome, ${username}!`;
+                closeSettings();
+                showNotification("Cập nhật thành công!");
+            }
+
+            function loadUserSettings() {
+                const currentUser = localStorage.getItem("currentUser");
+                const users = JSON.parse(localStorage.getItem("users") || "{}");
+                const user = users[currentUser];
+
+                if (user) {
+                    document.getElementById("username").value = currentUser;
+                    document.getElementById("email").value = user.email || "";
+                    document.getElementById("oldPassword").value = "";
+                    document.getElementById("newPassword").value = "";
+
+                    if (user.avatar) {
+                        document.getElementById("currentAvatar").src =
+                            user.avatar;
+                        document.getElementById("avatarIcon").src = user.avatar;
+                    }
+
+                    document.getElementById(
+                        "welcomeMessage"
+                    ).textContent = `Welcome, ${currentUser}!`;
+                }
+            }
+            function openSettings() {
+                document.getElementById("settingsOverlay").style.display =
+                    "flex";
+                loadUserSettings(); // <- cái này phải có!
             }
         </script>
     </body>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Settings</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Roboto", sans-serif;
+                background: linear-gradient(135deg, #e6f0fa, #b3d4fc);
+                min-height: 100vh;
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .settings-container {
+                background: #ffffff;
+                border-radius: 25px;
+                box-shadow: 0 20px 50px rgba(0, 51, 102, 0.25);
+                padding: 50px;
+                max-width: 600px;
+                width: 100%;
+                text-align: left;
+                border: 2px solid #cce5ff;
+            }
+
+            h2 {
+                font-size: 2.5em;
+                color: #003366;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            .form-group {
+                margin-bottom: 25px;
+            }
+
+            .form-group label {
+                display: block;
+                font-size: 1.1em;
+                color: #003366;
+                margin-bottom: 8px;
+                font-weight: bold;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="email"],
+            .form-group input[type="password"] {
+                width: 100%;
+                padding: 12px;
+                font-size: 1em;
+                border: 1px solid #cce5ff;
+                border-radius: 10px;
+                box-shadow: inset 0 2px 5px rgba(0, 51, 102, 0.05);
+            }
+
+            .avatar-section {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .avatar-preview {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                overflow: hidden;
+                margin: 0 auto 15px;
+                border: 3px solid #99ccff;
+                box-shadow: 0 5px 15px rgba(0, 51, 102, 0.15);
+            }
+
+            .avatar-preview img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .upload-avatar input[type="file"] {
+                display: block;
+                margin: 0 auto;
+                padding: 10px;
+                font-size: 1em;
+                border: 1px solid #cce5ff;
+                border-radius: 8px;
+                cursor: pointer;
+                background-color: #f0f8ff;
+            }
+
+            .actions {
+                text-align: center;
+            }
+
+            .actions button {
+                background: linear-gradient(90deg, #0066cc, #0080ff);
+                color: #fff;
+                border: none;
+                padding: 12px 30px;
+                font-size: 1.1em;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+                margin: 0 10px;
+            }
+
+            .actions button:hover {
+                background: linear-gradient(90deg, #0080ff, #3399ff);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="settings-container">
+            <h2>Cài đặt tài khoản</h2>
+
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mật khẩu mới:</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Chỉ nhập nếu muốn đổi mật khẩu"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="name">Tên hiển thị:</label>
+                <input type="text" id="name" placeholder="Nhập tên của bạn" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" placeholder="Email của bạn" />
+            </div>
+
+            <div class="avatar-section">
+                <h3>Ảnh đại diện</h3>
+                <div class="avatar-preview">
+                    <img
+                        id="currentAvatar"
+                        src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                        alt="Ảnh đại diện hiện tại"
+                    />
+                </div>
+                <div class="upload-avatar">
+                    <label for="newAvatar">Chọn ảnh mới:</label>
+                    <input type="file" id="newAvatar" accept="image/*" />
+                </div>
+            </div>
+
+            <div class="actions">
+                <button onclick="saveSettings()">Lưu thay đổi</button>
+                <button onclick="window.location.href = '/';">Hủy</button>
+            </div>
+        </div>
+
+        <script>
+            function saveSettings() {
+                const newUsername = document
+                    .getElementById("username")
+                    .value.trim();
+                const newPassword = document.getElementById("password").value;
+                const name = document.getElementById("name").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const newAvatarInput = document.getElementById("newAvatar");
+                const currentAvatar = document.getElementById("currentAvatar");
+
+                let currentUser = localStorage.getItem("currentUser");
+                if (!currentUser) {
+                    alert("Không tìm thấy người dùng hiện tại!");
+                    return;
+                }
+
+                let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+                // Nếu đổi username
+                if (newUsername !== currentUser) {
+                    if (users[newUsername]) {
+                        alert("Username mới đã tồn tại!");
+                        return;
+                    }
+                    users[newUsername] = { ...users[currentUser] };
+                    delete users[currentUser];
+                    currentUser = newUsername;
+                    localStorage.setItem("currentUser", newUsername);
+                }
+
+                users[currentUser].name = name;
+                users[currentUser].email = email;
+
+                if (newPassword) {
+                    users[currentUser].password = newPassword;
+                }
+
+                if (newAvatarInput.files && newAvatarInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        users[currentUser].avatar = e.target.result;
+                        currentAvatar.src = e.target.result;
+                        localStorage.setItem("users", JSON.stringify(users));
+                        alert("Đã lưu cài đặt!");
+                        window.location.href = "/";
+                    };
+                    reader.readAsDataURL(newAvatarInput.files[0]);
+                } else {
+                    localStorage.setItem("users", JSON.stringify(users));
+                    alert("Đã lưu cài đặt!");
+                    window.location.href = "/";
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const currentUser = localStorage.getItem("currentUser");
+                if (!currentUser) return;
+
+                const users = JSON.parse(localStorage.getItem("users") || "{}");
+                const user = users[currentUser];
+                if (!user) return;
+
+                document.getElementById("username").value = currentUser;
+                document.getElementById("name").value = user.name || "";
+                document.getElementById("email").value = user.email || "";
+                if (user.avatar) {
+                    document.getElementById("currentAvatar").src = user.avatar;
+                }
+            });
+        </script>
+    </body>
+</html>

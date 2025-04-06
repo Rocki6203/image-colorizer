@@ -359,6 +359,118 @@
                     window.location.href = "/index";
                 }
             };
+
+            // ... Các hàm JavaScript hiện tại của bạn ...
+
+            function openSettings() {
+                document.getElementById("settingsOverlay").style.display =
+                    "flex";
+                loadUserSettings(); // Gọi hàm loadUserSettings khi mở cài đặt
+            }
+
+            function closeSettings() {
+                document.getElementById("settingsOverlay").style.display =
+                    "none";
+            }
+
+            function saveSettings() {
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email").value;
+                // Lấy username từ localStorage
+                const currentUser = localStorage.getItem("currentUser");
+                const newAvatarInput = document.getElementById("newAvatar");
+                const currentAvatar = document.getElementById("currentAvatar");
+
+                // Lấy dữ liệu users từ localStorage
+                let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+                if (currentUser && users[currentUser]) {
+                    // Cập nhật email (username thường không nên thay đổi)
+                    users[currentUser].email = email;
+                    localStorage.setItem("users", JSON.stringify(users));
+                }
+
+                // Lưu tên (nếu bạn muốn lưu riêng)
+                localStorage.setItem("userName", name);
+                localStorage.setItem("userEmail", email);
+
+                if (newAvatarInput.files && newAvatarInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        currentAvatar.src = e.target.result;
+                        // Cập nhật avatar ở menu (nếu cần)
+                        const avatarIcon =
+                            document.getElementById("avatarIcon");
+                        if (avatarIcon) {
+                            avatarIcon.src = e.target.result;
+                        }
+                        localStorage.setItem("userAvatar", e.target.result); // Lưu avatar vào localStorage
+                    };
+                    reader.readAsDataURL(newAvatarInput.files[0]);
+                }
+
+                closeSettings();
+                showNotification("Đã lưu cài đặt!");
+            }
+
+            function loadUserSettings() {
+                const currentUser = localStorage.getItem("currentUser");
+                if (currentUser) {
+                    const users = JSON.parse(
+                        localStorage.getItem("users") || "{}"
+                    );
+                    if (users[currentUser]) {
+                        // Hiển thị username (nếu bạn muốn)
+                        const usernameInput =
+                            document.getElementById("username"); // Giả sử bạn có input field với id="username"
+                        if (usernameInput) {
+                            usernameInput.value = currentUser;
+                        }
+                        // Hiển thị email
+                        document.getElementById("email").value =
+                            users[currentUser].email;
+                    }
+                    // Hiển thị tên (nếu đã lưu trước đó)
+                    const savedName = localStorage.getItem("userName");
+                    if (savedName) {
+                        document.getElementById("name").value = savedName;
+                    }
+                    // Hiển thị avatar (nếu đã lưu trước đó)
+                    const savedAvatar = localStorage.getItem("userAvatar");
+                    const currentAvatarImg =
+                        document.getElementById("currentAvatar");
+                    const avatarIcon = document.getElementById("avatarIcon");
+                    if (savedAvatar && currentAvatarImg) {
+                        currentAvatarImg.src = savedAvatar;
+                        if (avatarIcon) {
+                            avatarIcon.src = savedAvatar;
+                        }
+                    }
+                }
+            }
+
+            // Thay đổi đường dẫn trong dropdown menu để gọi hàm openSettings
+            document.addEventListener("DOMContentLoaded", function () {
+                const settingsLink = document.querySelector(
+                    '#userDropdown a[href="/settings"]'
+                );
+                if (settingsLink) {
+                    settingsLink.addEventListener("click", function (event) {
+                        event.preventDefault(); // Ngăn chặn hành động mặc định của link (chuyển trang)
+                        openSettings();
+                    });
+                }
+                loadUserSettings(); // Tải thông tin người dùng khi trang index được tải (nếu cần hiển thị luôn)
+            });
+
+            function showNotification(message) {
+                const notification = document.getElementById("notification");
+                notification.textContent = message;
+                notification.style.display = "block";
+                setTimeout(() => (notification.style.display = "none"), 3000);
+            }
+
+            // ... Các hàm JavaScript khác của bạn ...
         </script>
     </body>
 </html>

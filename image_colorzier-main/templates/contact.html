@@ -5,188 +5,396 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Contact - Image Colorizer</title>
         <link
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
             rel="stylesheet"
         />
         <style>
+            :root {
+                --primary-color: #3b82f6;
+                --primary-color-darker: #2563eb;
+                --secondary-color: #6b7280;
+                --text-color-primary: #1f2937;
+                --text-color-secondary: #4b5563;
+                --bg-color: #f0f4f8;
+                --bg-color-light: #ffffff;
+                --border-color: #e0e7ff;
+                --footer-bg-start: #1f2937;
+                --footer-bg-end: #111827;
+                --footer-text-color: #d1d5db;
+                --shadow-color: rgba(0, 0, 0, 0.08);
+            }
+
             body {
-                font-family: "Roboto", sans-serif;
-                background: #f8fafc;
+                font-family: "Inter", sans-serif;
+                background-color: var(--bg-color);
+                color: var(--text-color-primary);
                 margin: 0;
                 padding: 0;
-                color: #1f2937;
+                line-height: 1.7;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
             }
 
             .back-button {
                 position: fixed;
-                top: 20px;
-                left: 20px;
-                background-color: #1e40af;
-                color: white;
-                padding: 10px 16px;
-                border-radius: 8px;
+                top: 40px;
+                left: 40px;
+                background-color: var(--primary-color);
+                color: var(--bg-color-light);
+                padding: 14px 30px;
+                border-radius: 12px;
                 text-decoration: none;
-                font-weight: bold;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                transition: background 0.3s ease;
+                font-weight: 600;
+                box-shadow: 0 8px 20px rgba(var(--primary-color-rgb), 0.3);
+                transition: background-color 0.3s ease-in-out,
+                    box-shadow 0.3s ease-in-out;
                 z-index: 1000;
             }
 
             .back-button:hover {
-                background-color: #3b82f6;
+                background-color: var(--primary-color-darker);
+                box-shadow: 0 10px 25px rgba(var(--primary-color-rgb), 0.4);
             }
 
             header {
-                background: linear-gradient(to right, #4f46e5, #6366f1);
-                color: white;
-                padding: 60px 20px 40px;
+                background: url("https://images.unsplash.com/photo-1581090700227-1c67d5b1f980?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80")
+                    center/cover no-repeat;
+                color: var(--bg-color-light);
+                padding: 180px 30px 120px;
                 text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            header::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.65);
+                z-index: 0;
+            }
+
+            header h1,
+            header p {
+                position: relative;
+                z-index: 1;
             }
 
             header h1 {
-                font-size: 40px;
-                margin-bottom: 12px;
+                font-size: 4rem;
+                margin-bottom: 20px;
+                text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+                letter-spacing: -0.5px;
             }
 
             header p {
-                font-size: 18px;
-                max-width: 700px;
+                font-size: 1.4rem;
+                max-width: 900px;
                 margin: 0 auto;
+                opacity: 0.9;
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
             }
 
             .contact-container {
-                max-width: 900px;
-                margin: 40px auto;
-                padding: 0 20px 60px;
+                max-width: 1200px;
+                margin: 90px auto;
+                padding: 0 30px;
                 display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 40px;
-            }
-
-            .contact-form {
-                background-color: #ffffff;
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-            }
-
-            .contact-form h2 {
-                margin-bottom: 20px;
-                color: #1d4ed8;
-            }
-
-            .contact-form input,
-            .contact-form textarea {
-                width: 100%;
-                padding: 12px;
-                margin-bottom: 16px;
-                border: 1px solid #cbd5e1;
-                border-radius: 8px;
-                font-size: 16px;
-            }
-
-            .contact-form button {
-                background-color: #1e40af;
-                color: white;
-                padding: 12px 20px;
-                border: none;
-                border-radius: 8px;
-                font-size: 16px;
-                cursor: pointer;
-                font-weight: bold;
-                transition: background 0.3s ease;
-            }
-
-            .contact-form button:hover {
-                background-color: #3b82f6;
+                grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                gap: 60px;
+                align-items: start;
             }
 
             .contact-info {
-                background-color: #e0e7ff;
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+                background-color: var(--bg-color-light);
+                padding: 70px;
+                border-radius: 28px;
+                box-shadow: 0 25px 70px var(--shadow-color);
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .contact-info:hover {
+                transform: translateY(-10px);
             }
 
             .contact-info h2 {
-                color: #1e3a8a;
-                margin-bottom: 20px;
+                margin-bottom: 40px;
+                color: var(--primary-color);
+                font-size: 2.75rem;
+                border-bottom: 4px solid var(--border-color);
+                padding-bottom: 20px;
             }
 
             .contact-info p {
-                margin-bottom: 16px;
-                line-height: 1.6;
+                margin-bottom: 30px;
+                font-size: 1.2rem;
+                color: var(--text-color-secondary);
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .contact-info p i {
+                font-size: 1.5rem;
+                color: var(--secondary-color);
+                width: 30px;
+                text-align: center;
+            }
+
+            .contact-info strong {
+                color: var(--text-color-primary);
+                font-weight: 700;
+            }
+
+            .map-container {
+                border-radius: 28px;
+                overflow: hidden;
+                box-shadow: 0 20px 55px rgba(0, 0, 0, 0.12);
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .map-container:hover {
+                transform: translateY(-10px);
+            }
+
+            .map-container iframe {
+                width: 100%;
+                height: 100%;
+                border: 0;
+                min-height: 450px;
+                border-radius: 28px; /* Ensure rounded corners for the iframe */
+            }
+
+            .contact-info > div {
+                margin-top: 40px;
+                padding-top: 20px;
+                border-top: 1px solid var(--border-color);
+            }
+
+            .contact-info h3 {
+                color: var(--primary-color);
+                font-size: 1.75rem;
+                margin-bottom: 15px;
+            }
+
+            .contact-info > div > p a {
+                color: var(--secondary-color);
+                text-decoration: none;
+                margin-right: 20px;
+                font-size: 1.4rem;
+                transition: color 0.3s ease-in-out;
+            }
+
+            .contact-info > div > p a:hover {
+                color: var(--primary-color-darker);
             }
 
             footer {
+                background: linear-gradient(
+                    to right,
+                    var(--footer-bg-start),
+                    var(--footer-bg-end)
+                );
+                color: var(--footer-text-color);
                 text-align: center;
-                padding: 20px;
-                background-color: #1e3a8a;
-                color: white;
+                padding: 50px 30px;
+                font-size: 1.1rem;
+                margin-top: 100px;
             }
 
-            @media screen and (max-width: 768px) {
+            footer p {
+                margin-bottom: 15px;
+                opacity: 0.8;
+            }
+
+            footer a {
+                color: #9ca3af;
+                text-decoration: none;
+                transition: color 0.3s ease-in-out;
+            }
+
+            footer a:hover {
+                color: var(--bg-color-light);
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 992px) {
+                header {
+                    padding: 150px 20px 100px;
+                }
+
+                header h1 {
+                    font-size: 3.5rem;
+                }
+
+                header p {
+                    font-size: 1.3rem;
+                }
+
                 .contact-container {
+                    padding: 0 20px;
                     grid-template-columns: 1fr;
+                    gap: 40px;
+                }
+
+                .contact-info {
+                    padding: 50px;
+                }
+
+                .contact-info h2 {
+                    font-size: 2.4rem;
+                    margin-bottom: 30px;
+                }
+
+                .contact-info p {
+                    font-size: 1.15rem;
+                    margin-bottom: 25px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                header h1 {
+                    font-size: 3rem;
+                }
+
+                header p {
+                    font-size: 1.2rem;
+                }
+
+                .back-button {
+                    top: 30px;
+                    left: 20px;
+                    padding: 12px 25px;
+                    font-size: 0.9rem;
+                }
+
+                .contact-info {
+                    padding: 40px;
+                }
+
+                .contact-info h2 {
+                    font-size: 2.2rem;
+                    margin-bottom: 25px;
+                }
+
+                .contact-info p {
+                    font-size: 1.1rem;
+                    margin-bottom: 20px;
+                    gap: 15px;
+                }
+
+                .contact-info p i {
+                    font-size: 1.3rem;
+                }
+            }
+
+            @media (max-width: 576px) {
+                header h1 {
+                    font-size: 2.5rem;
+                }
+
+                header p {
+                    font-size: 1.1rem;
+                }
+
+                .contact-info {
+                    padding: 30px;
+                }
+
+                .contact-info h2 {
+                    font-size: 2rem;
+                    margin-bottom: 20px;
+                }
+
+                .contact-info p {
+                    font-size: 1rem;
+                    margin-bottom: 15px;
+                }
+
+                .contact-info p i {
+                    font-size: 1.1rem;
                 }
             }
         </style>
     </head>
     <body>
-        <a href="{{ url_for('index') }}" class="back-button">← Back to Home</a>
+        <a href="{{ url_for('index') }}" class="back-button"
+            ><i class="fas fa-arrow-left"></i> Back to Home</a
+        >
 
         <header>
-            <h1>Contact Us</h1>
+            <h1>Let's Connect</h1>
             <p>
-                Have questions, feedback, or need assistance? We're here to
-                help. Reach out anytime!
+                We're here to help and answer any questions you might have. Feel
+                free to reach out to us through any of the channels below.
             </p>
         </header>
 
         <div class="contact-container">
-            <div class="contact-form">
-                <h2>Send a Message</h2>
-                <form action="#" method="POST">
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Your Name"
-                        required
-                    />
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Your Email"
-                        required
-                    />
-                    <textarea
-                        name="message"
-                        rows="6"
-                        placeholder="Your Message"
-                        required
-                    ></textarea>
-                    <button onclick="window.location.href='!#'">
-                        Send Message
-                    </button>
-                </form>
+            <div class="contact-info">
+                <h2>Contact Information</h2>
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    <strong>Email:</strong> support@imagecolorizer.com
+                </p>
+                <p>
+                    <i class="fas fa-phone"></i> <strong>Phone:</strong> +1
+                    (800) 123-4567
+                </p>
+                <p>
+                    <i class="fas fa-clock"></i> <strong>Hours:</strong> Monday
+                    - Friday, 9 AM - 6 PM (GMT+0)
+                </p>
+                <p>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <strong>Address:</strong> 66 Võ Văn Tần, Thanh Khê, Da Nang,
+                    Vietnam
+                </p>
+                <div>
+                    <h3>Follow Us</h3>
+                    <p>
+                        <a href="#" target="_blank" style="color: #3b5998"
+                            ><i class="fab fa-facebook fa-lg"></i
+                        ></a>
+                        <a href="#" target="_blank" style="color: #00acee"
+                            ><i class="fab fa-twitter fa-lg"></i
+                        ></a>
+                        <a href="#" target="_blank" style="color: #e1306c"
+                            ><i class="fab fa-instagram fa-lg"></i
+                        ></a>
+                        <a href="#" target="_blank" style="color: #0e76a8"
+                            ><i class="fab fa-linkedin fa-lg"></i
+                        ></a>
+                    </p>
+                </div>
             </div>
 
-            <div class="contact-info">
-                <h2>Our Contact Info</h2>
-                <p>
-                    📧 Email: <strong>support@imagecolorizer.com</strong><br />
-                    ☎️ Phone: <strong>+1 (800) 123-4567</strong><br />
-                    🕒 Hours: Monday – Friday, 9AM – 6PM (GMT+0)
-                </p>
-                <p>
-                    📍 Address:<br />
-                    Image Colorizer HQ<br />
-                    123 Creative Ave,<br />
-                    San Francisco, CA 94105, USA
-                </p>
+            <div class="map-container">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3834.427884799919!2d108.2134593742889!3d16.05977798460089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31421934518b057f%3A0x69177c44b2596114!2zNjYgV-G7pSBWXIm4gVOG6p24sIEhhICBWYW4sIFRoYW5oIEtow6o,IMSQw6AgTmFuZyA1NTAwMDAsIFZpZXRuYW0!5e0!3m2!1sen!2s!4v1712318188981!5m2!1sen!2s"
+                    width="600"
+                    height="450"
+                    style="border: 0"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                ></iframe>
             </div>
         </div>
 
-        <footer>© 2025 Image Colorizer. All rights reserved.</footer>
+        <footer>
+            <p>© 2025 Image Colorizer. All rights reserved.</p>
+            <p>
+                <a href="/privacy">Privacy Policy</a> |
+                <a href="/terms">Terms of Service</a>
+            </p>
+        </footer>
     </body>
 </html>
